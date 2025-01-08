@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin - Aplikasi Pemilu</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>Admin Panel - Kelola Pemilu</h1>
+  </header>
+
+  <main>
+    <!-- Tambah Calon -->
+    <section id="add-candidate-section">
+      <h2>Tambah Calon Legislatif</h2>
+      <form id="add-candidate-form" enctype="multipart/form-data">
+        <input type="text" id="nama" name="nama" placeholder="Nama" required>
+        <input type="text" id="partai" name="partai" placeholder="Partai" required>
+        <input type="text" id="daerahPemilihan" name="daerahPemilihan" placeholder="Daerah Pemilihan" required>
+        
+        <textarea id="visiMisi" name="visiMisi" placeholder="Visi dan Misi" maxlength="500" required></textarea>
+        <select id="jenis" name="jenis" required>
+          <option value="">Pilih Jenis</option>
+          <option value="DPR">DPR</option>
+          <option value="DPRD Provinsi">DPRD Provinsi</option>
+          <option value="DPRD Kabupaten">DPRD Kabupaten</option>
+          <option value="DPRD Kotamadya">DPRD Kotamadya</option>
+        </select>
+        <label for="foto">Upload Foto:</label>
+        <input type="file" id="foto" name="foto" accept="image/*" required>
+        <button type="submit">Tambah Calon</button>
+      </form>
+    </section>
+    
+
+    <!-- Filter dan Tabel Calon -->
+    <section id="filter-candidate-section">
+      <h2>Daftar Calon Legislatif</h2>
+      <label for="filterJenis">Filter Berdasarkan Jenis:</label>
+      <select id="filterJenis">
+        <option value="ALL">Semua</option>
+        <option value="DPR">DPR</option>
+        <option value="DPRD Provinsi">DPRD Provinsi</option>
+        <option value="DPRD Kabupaten">DPRD Kabupaten</option>
+        <option value="DPRD Kotamadya">DPRD Kotamadya</option>
+      </select>
+      <table id="candidate-table">
+        <thead>
+          <tr>
+            <th>Foto</th>
+            <th>Nama</th>
+            <th>Partai</th>
+            <th>Daerah Pemilihan</th>
+          
+            <th>Jenis</th>
+            <th>Visi dan Misi</th>
+            <th>Aksi</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Data calon akan di-load dengan JavaScript -->
+        </tbody>
+      </table>
+    </section>
+    <section id="rekapitulasi-section">
+      <h2>Hasil Rekapitulasi Suara</h2>
+      <label for="filterDaerah">Filter Berdasarkan Daerah:</label>
+      <input type="text" id="filterDaerah" placeholder="Masukkan daerah pemilihan">
+      <button id="loadRekapitulasi">Tampilkan Rekapitulasi</button>
+      <div id="rekapitulasi-container">
+        <!-- Hasil rekapitulasi akan dimuat dengan JavaScript -->
+      </div>
+    </section>
+    
+
+    <button id="logout-btn">Logout</button>
+
+  </main>
+
+  <script src="script.js" defer></script>
+</body>
+</html>
+

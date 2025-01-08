@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Login - Aplikasi Pemilu</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>Login Aplikasi Pemilu</h1>
+  </header>
+
+  <main>
+    <form id="login-form">
+      <div>
+        <label>
+          <input type="radio" name="role" value="admin" required> Admin
+        </label>
+        <label>
+          <input type="radio" name="role" value="pemilih" required> Pemilih
+        </label>
+      </div>
+
+      <div>
+        <label for="identifier">Email (Admin) / NIK (Pemilih):</label>
+        <input type="text" id="identifier" name="identifier" required>
+      </div>
+
+      <div id="password-field" style="display: none;">
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password">
+      </div>
+
+      <div id="register-link" style="display: none;">
+        <a href="register.html">Belum punya akun? Daftar di sini</a>
+      </div>
+
+      <button type="submit">Login</button>
+    </form>
+    
+  </main>
+
+  <script src="index.js" defer></script>
+</body>
+</html>

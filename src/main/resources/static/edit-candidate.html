@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edit Calon Legislatif</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>Edit Calon Legislatif</h1>
+  </header>
+
+  <main>
+    <form id="edit-candidate-form" enctype="multipart/form-data">
+      <div>
+        <label for="nama">Nama</label>
+        <input type="text" id="nama" name="nama" placeholder="Nama">
+      </div>
+      <div>
+        <label for="partai">Partai</label>
+        <input type="text" id="partai" name="partai" placeholder="Partai">
+      </div>
+      <div>
+        <label for="daerahPemilihan">Daerah Pemilihan</label>
+        <input type="text" id="daerahPemilihan" name="daerahPemilihan" placeholder="Daerah Pemilihan">
+      </div>
+      <div>
+        <label for="visiMisi">Visi dan Misi</label>
+        <textarea id="visiMisi" name="visiMisi" placeholder="Visi dan Misi"></textarea>
+      </div>
+      <div>
+        <label for="jenis">Jenis</label>
+        <select id="jenis" name="jenis">
+          <option value="">Pilih Jenis</option>
+          <option value="DPR">DPR</option>
+          <option value="DPRD Provinsi">DPRD Provinsi</option>
+          <option value="DPRD Kabupaten">DPRD Kabupaten</option>
+          <option value="DPRD Kotamadya">DPRD Kotamadya</option>
+        </select>
+      </div>
+      <div>
+        <label for="foto">Upload Foto Baru (Opsional):</label>
+        <input type="file" id="foto" name="foto" accept="image/*">
+      </div>
+      <button type="submit">Simpan Perubahan</button>
+    </form>
+  </main>
+  
+  
+  <script src="edit-candidate.js" defer></script>
+</body>
+</html>

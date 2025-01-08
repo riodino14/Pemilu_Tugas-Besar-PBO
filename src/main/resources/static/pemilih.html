@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pemilih - Aplikasi Pemilu</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>Form Voting Pemilih</h1>
+  </header>
+
+  <main>
+    <section id="input-daerah">
+      <h2>Masukkan Daerah Pemilihan</h2>
+      <input type="text" id="daerah-input" placeholder="Masukkan daerah pemilihan">
+      <button id="load-candidates">Cari Kandidat</button>
+    </section>
+
+    <section id="candidate-section" style="display: none;">
+      <h2>Daftar Calon Legislatif</h2>
+      <ul id="candidate-list"></ul>
+    </section>
+
+    <section id="voting-section" style="display: none;">
+      <h2>Form Voting</h2>
+      <div id="vote-forms"></div>
+      <button id="vote-button">Submit Vote</button>
+    </section>
+
+    <section id="rekapitulasi-section" style="display: none;">
+      <h2>Hasil Rekapitulasi Suara</h2>
+      <div id="rekapitulasi-container"></div>
+    </section>
+  </main>
+
+  <script src="pemilih.js"></script>
+</body>
+</html>
