@@ -6,7 +6,44 @@ body {
     background: linear-gradient(to right, #c9d6ff, #FFF2E1);
     color: #333;
   }
+    button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
   
+  button:hover {
+    background-color: #45a049;
+  }
+  
+  #register-link {
+    margin-top: 10px;
+    font-size: 14px;
+  } 
+  
+  #register-link a {
+    color: blue;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+  }
+  table th, table td {
+    border: 1px solid #ddd;
+    padding: 0.75rem;
+    text-align: left;
+  }
+  table th {
+    background-color: #FFE0B2;
+  }
+  table tbody tr:nth-child(even) {
+    background-color: #FFF2E1;
+  }
   header {
     background: #333;
     color: #fffff;
