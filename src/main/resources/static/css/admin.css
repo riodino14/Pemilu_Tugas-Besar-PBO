@@ -9,7 +9,7 @@ body {
   
   header {
     background: #333;
-    color: #fff;
+    color: #fffff;
     padding: 10px 20px;
     text-align: center;
   }
@@ -44,7 +44,7 @@ body {
   
   button {
     background: #333;
-    color: #fff;
+    color: #fffff;
     border: none;
     cursor: pointer;
   }
