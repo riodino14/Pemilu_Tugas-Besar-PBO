@@ -6,7 +6,59 @@ body {
     background-color: #f4f4f4;
     color: #333;
   }
+    
+  button {
+    background: #F48C06;
+    color: #fff;
+    border: none;
+    padding: 8px 15px; /* Diperkecil */
+    border-radius: 15px; /* Diperkecil */
+    font-size: 0.9rem; /* Diperkecil */
+    cursor: pointer;
+    transition: background 0.3s ease;
+    display: block;
+    width: 100%;
+    max-width: 150px; /* Diperkecil */
+    margin: 20px auto 0; /* Sesuaikan */
+  }
   
+  button:hover {
+    background: #c07109;
+  }
+  
+  button:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+  }
+  
+  #register-link {
+    margin-top: 10px;
+    font-size: 14px;
+  } 
+  
+  #register-link a {
+    color: blue;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+  }
+  table th, table td {
+    border: 1px solid #ddd;
+    padding: 0.75rem;
+    text-align: left;
+  }
+  table th {
+    background-color: #FFE0B2;
+  }
+  table tbody tr:nth-child(even) {
+    background-color: #FFF2E1;
+  }
+
   header {
     /* background: #333;
     color: #fff;
@@ -92,56 +144,4 @@ body {
     border-radius: 4px;
     font-size: 1rem;
   }
-  
-  button {
-    background: #F48C06;
-    color: #fff;
-    border: none;
-    padding: 8px 15px; /* Diperkecil */
-    border-radius: 15px; /* Diperkecil */
-    font-size: 0.9rem; /* Diperkecil */
-    cursor: pointer;
-    transition: background 0.3s ease;
-    display: block;
-    width: 100%;
-    max-width: 150px; /* Diperkecil */
-    margin: 20px auto 0; /* Sesuaikan */
-  }
-  
-  button:hover {
-    background: #c07109;
-  }
-  
-  button:disabled {
-    background: #ccc;
-    cursor: not-allowed;
-  }
-  
-  
-  #register-link {
-    margin-top: 10px;
-    font-size: 14px;
-  } 
-  
-  #register-link a {
-    color: blue;
-    text-decoration: underline;
-    cursor: pointer;
-  }
 
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 1rem;
-  }
-  table th, table td {
-    border: 1px solid #ddd;
-    padding: 0.75rem;
-    text-align: left;
-  }
-  table th {
-    background-color: #FFE0B2;
-  }
-  table tbody tr:nth-child(even) {
-    background-color: #FFF2E1;
-  }
