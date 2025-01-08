@@ -74,7 +74,27 @@ document.addEventListener("DOMContentLoaded", () => {
           alert("Harap lengkapi semua kolom.");
           return;
       }
+      // Hash password
+      const hashedPassword = await hashPassword(password);
 
+      try {
+          const response = await fetch("http://localhost:8080/api/auth/login/admin", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ email: email, password: hashedPassword }),
+          });
+
+          if (response.ok) {
+              alert("Login berhasil!");
+              window.location.href = "admin.html";
+          } else {
+              const error = await response.json();
+              alert(error.message || "Login gagal.");
+          }
+      } catch (error) {
+          console.error("Error login:", error.message);
+          alert("Terjadi kesalahan. Silakan coba lagi.");
+        }
       
     });
   });
