@@ -180,3 +180,14 @@ body {
   .popup-content button:hover {
     background: #c07109;
   }
+  
+  /* Responsif untuk layar kecil */
+  @media (max-width: 768px) {
+    .main-content {
+        flex-direction: column; /* Tumpuk vertikal pada layar kecil */
+    }
+  
+    #candidate-section, #voting-section {
+        max-width: 100%;
+    }
+  }
