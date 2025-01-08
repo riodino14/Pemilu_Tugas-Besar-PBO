@@ -1,85 +1,256 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Admin - Aplikasi Pemilu</title>
-  <link rel="stylesheet" href="style.css">
+
+  <!-- Bootstrap CSS -->
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+  />
+  <!-- Tailwind (opsional) -->
+  <link
+    href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css"
+    rel="stylesheet"
+  />
+  <!-- Alpine (opsional) -->
+  <script
+    src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"
+    defer
+  ></script>
+  <!-- AOS (opsional) -->
+  <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+  <!-- Poppins font (opsional) -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
+  <!-- Font Awesome (opsional) -->
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+  />
+
+  <!-- CSS Tambahan Admin -->
+  <link rel="stylesheet" href="css/admin.css" />
 </head>
 <body>
-  <header>
-    <h1>Admin Panel - Kelola Pemilu</h1>
-  </header>
+  <!-- NAVBAR -->
+  <div
+    x-data="{ open: false }"
+    class="w-full text-gray-400 fixed top-0 left-0 z-50 shadow-md"
+    style="background-color: #f4f4f4"
+  >
+    <div
+      class="flex flex-col max-w-screen-xl px-4 mx-auto md:items-center md:justify-between md:flex-row"
+    >
+      <div class="flex flex-row items-center justify-between py-4">
+        <div class="relative flex items-center space-x-2">
+          <!-- Logo -->
+          <a href="admin.html" class="flex items-center">
+            <img
+              src="img/logoKPU.png"
+              alt="Pemilu Logo"
+              class="h-12 w-12 z-50"
+            />
+          </a>
+          <!-- Text -->
+          <a
+            href="admin.html"
+            class="text-lg font-bold tracking-wide text-gray-900 rounded-lg focus:outline-none focus:shadow-outline"
+          >
+            Admin Panel - Kelola Pemilu
+          </a>
+        </div>
+        <button
+          class="rounded-lg md:hidden focus:outline-none focus:shadow-outline"
+          @click="open = !open"
+        >
+          <svg fill="currentColor" viewBox="0 0 20 20" class="w-5 h-5">
+            <path
+              x-show="!open"
+              fill-rule="evenodd"
+              d="M3 5h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 5h12a1 1 0 110 2H4a1 1 0 01-1-1zm6 5h6a1 1 0 110 2H9a1 1 0 01-1-1z"
+              clip-rule="evenodd"
+            ></path>
+            <path
+              x-show="open"
+              fill-rule="evenodd"
+              d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 010 1.414L11.414 10l4.293 4.293a1 1 0 010 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+              clip-rule="evenodd"
+            ></path>
+          </svg>
+        </button>
+      </div>
+      <nav
+        :class="{ 'transform md:transform-none': !open, 'h-full': open }"
+        class="h-0 md:h-auto flex flex-col flex-grow md:items-center pb-2 md:pb-0 md:flex md:justify-end md:flex-row origin-top duration-300 scale-y-0"
+      >
+        <div class="relative inline-block">
+          <button
+            id="logout-btn"
+            class="px-6 py-2 text-sm text-center bg-yellow-500 text-white rounded-full md:ml-2 focus:outline-none transform transition hover:scale-110 duration-300 ease-in-out"
+          >
+            Logout
+          </button>
+        </div>
+      </nav>
+    </div>
+  </div>
 
-  <main>
-    <!-- Tambah Calon -->
-    <section id="add-candidate-section">
-      <h2>Tambah Calon Legislatif</h2>
-      <form id="add-candidate-form" enctype="multipart/form-data">
-        <input type="text" id="nama" name="nama" placeholder="Nama" required>
-        <input type="text" id="partai" name="partai" placeholder="Partai" required>
-        <input type="text" id="daerahPemilihan" name="daerahPemilihan" placeholder="Daerah Pemilihan" required>
-        
-        <textarea id="visiMisi" name="visiMisi" placeholder="Visi dan Misi" maxlength="500" required></textarea>
-        <select id="jenis" name="jenis" required>
-          <option value="">Pilih Jenis</option>
-          <option value="DPR">DPR</option>
-          <option value="DPRD Provinsi">DPRD Provinsi</option>
-          <option value="DPRD Kabupaten">DPRD Kabupaten</option>
-          <option value="DPRD Kotamadya">DPRD Kotamadya</option>
-        </select>
-        <label for="foto">Upload Foto:</label>
-        <input type="file" id="foto" name="foto" accept="image/*" required>
-        <button type="submit">Tambah Calon</button>
-      </form>
-    </section>
-    
+  <main style="margin-top: 80px">
+    <!-- 1) Daftar Calon Legislatif -->
+    <section
+      id="filter-candidate-section"
+      style="background-color: #f4f4f4; padding: 20px"
+    >
+      <div class="container">
+        <h1 class="text-center font-bold mb-4">Daftar Calon Legislatif</h1>
+        <div
+          class="d-flex flex-wrap justify-content-between align-items-center mb-4"
+        >
+          <!-- Filter Jenis (Client-side) -->
+          <div class="d-flex align-items-center mb-2">
+            <label for="filterJenis" class="me-2">Filter Jenis Caleg:</label>
+            <select id="filterJenis" class="form-select" style="width: 200px">
+              <option value="ALL" selected>Semua</option>
+              <option value="DPR">DPR</option>
+              <option value="DPRD Provinsi">DPRD Provinsi</option>
+              <option value="DPRD Kabupaten">DPRD Kabupaten</option>
+              <option value="DPRD Kotamadya">DPRD Kotamadya</option>
+            </select>
+          </div>
 
-    <!-- Filter dan Tabel Calon -->
-    <section id="filter-candidate-section">
-      <h2>Daftar Calon Legislatif</h2>
-      <label for="filterJenis">Filter Berdasarkan Jenis:</label>
-      <select id="filterJenis">
-        <option value="ALL">Semua</option>
-        <option value="DPR">DPR</option>
-        <option value="DPRD Provinsi">DPRD Provinsi</option>
-        <option value="DPRD Kabupaten">DPRD Kabupaten</option>
-        <option value="DPRD Kotamadya">DPRD Kotamadya</option>
-      </select>
-      <table id="candidate-table">
-        <thead>
-          <tr>
-            <th>Foto</th>
-            <th>Nama</th>
-            <th>Partai</th>
-            <th>Daerah Pemilihan</th>
-          
-            <th>Jenis</th>
-            <th>Visi dan Misi</th>
-            <th>Aksi</th>
-          </tr>
-        </thead>
-        <tbody>
-          <!-- Data calon akan di-load dengan JavaScript -->
-        </tbody>
-      </table>
-    </section>
-    <section id="rekapitulasi-section">
-      <h2>Hasil Rekapitulasi Suara</h2>
-      <label for="filterDaerah">Filter Berdasarkan Daerah:</label>
-      <input type="text" id="filterDaerah" placeholder="Masukkan daerah pemilihan">
-      <button id="loadRekapitulasi">Tampilkan Rekapitulasi</button>
-      <div id="rekapitulasi-container">
-        <!-- Hasil rekapitulasi akan dimuat dengan JavaScript -->
+          <!-- Cari Daerah Pemilihan -->
+          <div class="d-flex align-items-center mb-2">
+            <label for="filterDaerahPemilihan" class="me-2"
+              >Cari Daerah Pemilihan:</label
+            >
+            <input
+              type="text"
+              id="filterDaerahPemilihan"
+              class="form-control"
+              placeholder="Misal: Jawa Barat II"
+              style="width: 250px;"
+            />
+          </div>
+
+          <!-- Tombol Tambah Calon -->
+          <button
+            onclick="window.location.href='tambahcalon.html'"
+            class="btn btn-warning"
+          >
+            <i class="fa-solid fa-user-plus"></i> Tambah Calon
+          </button>
+        </div>
+
+        <table id="candidate-table" class="table table-bordered">
+          <thead>
+            <tr>
+              <th>Foto</th>
+              <th>Nama</th>
+              <th>Partai</th>
+              <th>Daerah Pemilihan</th>
+              <th>Jenis</th>
+              <th>Visi dan Misi</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Data calon akan di-load dengan JavaScript -->
+          </tbody>
+        </table>
       </div>
     </section>
-    
 
-    <button id="logout-btn">Logout</button>
+    <!-- 2) Bagian Rekapitulasi -->
+    <section
+      id="rekapitulasi-section"
+      style="background-color: #f4f4f4; padding: 20px"
+    >
+      <div class="container">
+        <h2 class="text-center font-bold mb-4">Hasil Rekapitulasi Suara</h2>
 
+        <!-- Filter Rekapitulasi -->
+        <div class="d-flex flex-wrap justify-content-start align-items-center mb-4">
+          <!-- Filter Jenis -->
+          <div class="d-flex align-items-center me-4 mb-2">
+            <label for="filterJenisRekap" class="me-2">Filter Jenis Caleg:</label>
+            <select id="filterJenisRekap" class="form-select" style="width: 200px;">
+              <option value="">Semua</option>
+              <option value="DPR">DPR</option>
+              <option value="DPRD Provinsi">DPRD Provinsi</option>
+              <option value="DPRD Kabupaten">DPRD Kabupaten</option>
+              <option value="DPRD Kotamadya">DPRD Kotamadya</option>
+            </select>
+          </div>
+
+          <!-- Filter Daerah Pemilihan -->
+          <div class="d-flex align-items-center mb-2">
+            <label for="filterDaerahRekap" class="me-2">Filter Daerah Pemilihan:</label>
+            <input
+              type="text"
+              id="filterDaerahRekap"
+              class="form-control"
+              placeholder="Misal: Jawa Barat"
+              style="width: 250px;"
+            />
+          </div>
+        </div>
+
+        <!-- Kontainer rekap -->
+        <div id="rekapitulasi-container"></div>
+      </div>
+    </section>
   </main>
 
-  <script src="script.js" defer></script>
+  <script src="javascript/script.js" defer></script>
+
+  <!-- FOOTER -->
+  <footer class="mt-32" style="background-color: rgba(37, 38, 65, 1)">
+    <div class="max-w-lg mx-auto">
+      <div
+        class="flex py-12 justify-center text-white items-center px-20 sm:px-36"
+      >
+        <div class="relative">
+          <h1 class="font-bold text-xl pr-5 relative z-50">PEMILU</h1>
+          <svg
+            class="w-11 h-11 absolute -top-2 -left-3 z-40"
+            viewBox="0 0 79 79"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M35.9645 2.94975C37.9171 0.997129 41.0829 0.997127 43.0355 2.94975L76.0502 35.9645C78.0029 37.9171 78.0029 41.0829 76.0503 43.0355L43.0355 76.0502C41.0829 78.0029 37.9171 78.0029 35.9645 76.0503L2.94975 43.0355C0.997129 41.0829 0.997127 37.9171 2.94975 35.9645L35.9645 2.94975Z"
+              stroke="#26C1F2"
+              stroke-width="2"
+            />
+          </svg>
+        </div>
+        <span
+          class="border-l border-gray-500 text-sm pl-5 py-2 font-semibold"
+          >Mencoblos Berbasis Virtual</span
+        >
+      </div>
+      <div
+        class="flex items-center text-gray-400 text-sm justify-center"
+      >
+        <p class="pr-3">Tugas Besar</p>
+        <p class="border-l border-gray-400 px-3">Pemrograman Berbasis Objek</p>
+        <p class="border-l border-gray-400 pl-3">IF-46-04</p>
+      </div>
+      <div class="text-center text-white">
+        <p class="py-3 text-gray-400 text-sm">&copy; Created by Kelompok 3.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- AOS init (opsional) -->
+  <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+  <script>
+    AOS.init();
+  </script>
 </body>
 </html>
-
