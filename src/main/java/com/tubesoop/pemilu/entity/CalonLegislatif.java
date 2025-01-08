@@ -1,9 +1,11 @@
+// CalonLegislatif.java
 package com.tubesoop.pemilu.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Transient;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -23,12 +25,6 @@ public class CalonLegislatif {
     @NotEmpty(message = "Daerah Pemilihan tidak boleh kosong")
     private String daerahPemilihan;
 
-    
-
-   
-
-    
-
     @Size(max = 500, message = "Visi dan Misi tidak boleh lebih dari 500 karakter")
     private String visiMisi;
 
@@ -36,8 +32,11 @@ public class CalonLegislatif {
     private String jenis; // Jenis: DPR, DPRD Provinsi, dll.
 
     private int totalSuara = 0; // Inisialisasi default
-    
+
     private String foto;  // Path Foto
+
+    @Transient
+    private double persentaseSuara;
 
     // Constructor
     public CalonLegislatif() {}
@@ -52,14 +51,6 @@ public class CalonLegislatif {
     }
 
     // Getters and Setters
-    public String getFoto() {
-        return foto;
-    }
-
-    public void setFoto(String foto) {
-        this.foto = foto;
-    }
-
     public Long getId() {
         return id;
     }
@@ -92,8 +83,6 @@ public class CalonLegislatif {
         this.daerahPemilihan = daerahPemilihan;
     }
 
-    
-
     public String getVisiMisi() {
         return visiMisi;
     }
@@ -118,6 +107,22 @@ public class CalonLegislatif {
         this.totalSuara = totalSuara;
     }
 
+    public String getFoto() {
+        return foto;
+    }
+
+    public void setFoto(String foto) {
+        this.foto = foto;
+    }
+
+    public double getPersentaseSuara() {
+        return persentaseSuara;
+    }
+
+    public void setPersentaseSuara(double persentaseSuara) {
+        this.persentaseSuara = persentaseSuara;
+    }
+
     @Override
     public String toString() {
         return "CalonLegislatif{" +
@@ -125,7 +130,6 @@ public class CalonLegislatif {
                 ", nama='" + nama + '\'' +
                 ", partai='" + partai + '\'' +
                 ", daerahPemilihan='" + daerahPemilihan + '\'' +
-
                 ", visiMisi='" + visiMisi + '\'' +
                 ", jenis='" + jenis + '\'' +
                 ", totalSuara=" + totalSuara +
