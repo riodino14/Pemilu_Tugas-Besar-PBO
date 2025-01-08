@@ -74,6 +74,7 @@ document.addEventListener("DOMContentLoaded", () => {
           alert("Harap lengkapi semua kolom.");
           return;
       }
+
       // Hash password
       const hashedPassword = await hashPassword(password);
 
@@ -95,7 +96,6 @@ document.addEventListener("DOMContentLoaded", () => {
           console.error("Error login:", error.message);
           alert("Terjadi kesalahan. Silakan coba lagi.");
         }
-      
     });
   });
 });
