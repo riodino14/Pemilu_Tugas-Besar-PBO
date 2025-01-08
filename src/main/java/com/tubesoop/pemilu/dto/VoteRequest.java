@@ -1,5 +1,4 @@
 package com.tubesoop.pemilu.dto;
-
 import jakarta.validation.constraints.NotNull;
 
 public class VoteRequest {
