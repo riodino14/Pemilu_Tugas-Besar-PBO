@@ -1,7 +1,5 @@
 package com.tubesoop.pemilu.entity;
 
-
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 
@@ -9,13 +7,15 @@ import jakarta.persistence.Id;
 public class Pemilih extends User {
     @Id
     private String nik; // NIK sebagai ID unik
+    private String noTelp; // Nomor telepon pemilih
     private boolean sudahMemilih;
 
     public Pemilih() {} // Constructor default
 
-    public Pemilih(String nik, String nama, String email) {
-        super(nama, email);
+    public Pemilih(String nik, String nama, String email, String password, String noTelp) {
+        super(nama, email, password);
         this.nik = nik;
+        this.noTelp = noTelp;
         this.sudahMemilih = false;
     }
 
@@ -27,6 +27,14 @@ public class Pemilih extends User {
         this.nik = nik;
     }
 
+    public String getNoTelp() {
+        return noTelp;
+    }
+
+    public void setNoTelp(String noTelp) {
+        this.noTelp = noTelp;
+    }
+
     public boolean isSudahMemilih() {
         return sudahMemilih;
     }
@@ -35,8 +43,8 @@ public class Pemilih extends User {
         this.sudahMemilih = sudahMemilih;
     }
 
-    @Override
-    public String getRole() {
-        return "Pemilih";
-    }
+    // @Override
+    // public String getRole() {
+    //     return "Pemilih";
+    // }
 }
