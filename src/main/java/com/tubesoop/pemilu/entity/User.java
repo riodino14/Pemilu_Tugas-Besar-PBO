@@ -8,12 +8,14 @@ import jakarta.persistence.MappedSuperclass;
 public abstract class User {
     private String nama;
     private String email;
+    private String password; 
 
     public User() {} // Constructor default
 
-    public User(String nama, String email) {
+    public User(String nama, String email, String password) {
         this.nama = nama;
         this.email = email;
+        this.password = password;
     }
 
     public String getNama() {
@@ -32,5 +34,13 @@ public abstract class User {
         this.email = email;
     }
 
-    public abstract String getRole();
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    // public abstract String getRole();
 }
