@@ -30,7 +30,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     try {
-      const response = await fetch("http://localhost:8080/api/auth/login/admin", { // Perbaiki URL
+      const response = await fetch("http://localhost:8080/api/auth/login/admin", { // Kirim request ke API login admin
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: email, password: password }),
@@ -99,3 +99,4 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 });
+
