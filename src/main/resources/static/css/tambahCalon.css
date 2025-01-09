@@ -1,0 +1,147 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+    background-color: #f4f4f4;
+    color: #333;
+  }
+  
+  header {
+    /* background: #333;
+    color: #fff;
+    padding: 10px 20px;
+    text-align: center; */
+    background-color: #FFA726;
+      color: white;
+      padding: 1rem;
+      text-align: center;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  main {
+    padding: 2rem;
+    margin-top: 100px;
+  }
+
+  section {
+    background-color: #FFF4E3;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  h1, h2 {
+    margin-bottom: 20px;
+    margin-top: 0;
+    margin: 0;
+  }
+  
+  form, section {
+    margin-bottom: 20px;
+  }
+  
+  input, select, button {
+    padding: 10px;
+    margin: 10px 0;
+  }
+  
+  button {
+    background: #F48C06;
+    color: #fff;
+    border: none;
+    padding: 8px 15px; /* Diperkecil */
+    border-radius: 15px; /* Diperkecil */
+    font-size: 0.9rem; /* Diperkecil */
+    cursor: pointer;
+    transition: background 0.3s ease;
+    display: block;
+    width: 100%;
+    max-width: 150px; /* Diperkecil */
+    margin: 20px auto 0; /* Sesuaikan */
+  }
+  
+  button:hover {
+    background: #c07109;
+  }
+  
+  button:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+  }
+  
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    max-width: 500px;
+    margin: 0 auto;
+  }
+  
+  label {
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+  }
+  
+  input, textarea, select {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+  }
+  
+  button {
+    background: #F48C06;
+    color: #fff;
+    border: none;
+    padding: 8px 15px; /* Diperkecil */
+    border-radius: 15px; /* Diperkecil */
+    font-size: 0.9rem; /* Diperkecil */
+    cursor: pointer;
+    transition: background 0.3s ease;
+    display: block;
+    width: 100%;
+    max-width: 150px; /* Diperkecil */
+    margin: 20px auto 0; /* Sesuaikan */
+  }
+  
+  button:hover {
+    background: #c07109;
+  }
+  
+  button:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+  }
+  
+  
+  #register-link {
+    margin-top: 10px;
+    font-size: 14px;
+  } 
+  
+  #register-link a {
+    color: blue;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+  }
+  table th, table td {
+    border: 1px solid #ddd;
+    padding: 0.75rem;
+    text-align: left;
+  }
+  table th {
+    background-color: #FFE0B2;
+  }
+  table tbody tr:nth-child(even) {
+    background-color: #FFF2E1;
+  }

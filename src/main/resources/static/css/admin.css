@@ -1,0 +1,104 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+    background: linear-gradient(to right, #c9d6ff, #FFF2E1);
+    color: #333;
+  }
+  
+  header {
+    background: #333;
+    color: #fff;
+    padding: 10px 20px;
+    text-align: center;
+  }
+  
+  main {
+    padding: 2rem;
+    margin-top: 100px;
+  }
+  
+  h1, h2 {
+    margin-bottom: 20px;
+    margin-top: 0;
+    margin: 0;
+  }
+
+  section {
+    background-color: #FFF4E3;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  form, section {
+    margin-bottom: 20px;
+  }
+  
+  input, select, button {
+    padding: 10px;
+    margin: 10px 0;
+  }
+  
+  button {
+    background: #333;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+  }
+  
+  button:hover {
+    background: #555;
+  }
+  
+  label {
+    margin-bottom: 0.5rem;
+  }
+  
+  input, textarea, select, button {
+    padding: 0.5rem;
+    font-size: 1rem;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  
+  button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+  
+  button:hover {
+    background-color: #45a049;
+  }
+  
+  #register-link {
+    margin-top: 10px;
+    font-size: 14px;
+  } 
+  
+  #register-link a {
+    color: blue;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+  }
+  table th, table td {
+    border: 1px solid #ddd;
+    padding: 0.75rem;
+    text-align: left;
+  }
+  table th {
+    background-color: #FFE0B2;
+  }
+  table tbody tr:nth-child(even) {
+    background-color: #FFF2E1;
+  }
