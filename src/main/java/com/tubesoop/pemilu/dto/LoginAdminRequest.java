@@ -1,19 +1,19 @@
 package com.tubesoop.pemilu.dto;
 
 public class LoginAdminRequest {
-    // private String role;  // "admin" atau "pemilih"
+    private String role;  // "admin" atau "pemilih"
     private String email;  // Email untuk admin
     private String password;  // Password untuk admin
 
-    // Constructor, Getter dan Setter
+    Constructor, Getter dan Setter
 
-    // public String getRole() {
-    //     return role;
-    // }
+    public String getRole() {
+         return role;
+    }
 
-    // public void setRole(String role) {
-    //     this.role = role;
-    // }
+    public void setRole(String role) {
+         this.role = role;
+     }
 
     public String getEmail() {
         return email;
