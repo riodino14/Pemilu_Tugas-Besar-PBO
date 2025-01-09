@@ -1,6 +1,7 @@
 package com.tubesoop.pemilu.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.tubesoop.pemilu.dto.VoteRequest;
@@ -10,9 +11,17 @@ import com.tubesoop.pemilu.repository.CalonLegislatifRepository;
 import com.tubesoop.pemilu.repository.PemilihRepository;
 import com.tubesoop.pemilu.utils.ApiResponse;
 
-import org.springframework.transaction.annotation.Transactional;
+import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.Valid;
 
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/pemilih")
@@ -41,7 +50,7 @@ public class PemilihController {
     // Endpoint baru untuk voting batch
     @PostMapping("/vote/batch")
     @Transactional
-    public ResponseEntity<ApiResponse> voteBatch(@RequestBody List<VoteRequest> voteRequests) {
+    public ResponseEntity<ApiResponse> voteBatch(@Valid @RequestBody List<VoteRequest> voteRequests) {
         if (voteRequests == null || voteRequests.isEmpty()) {
             return ResponseEntity.badRequest().body(new ApiResponse("error", "Tidak ada vote yang dikirimkan"));
         }
@@ -90,8 +99,9 @@ public class PemilihController {
     }
 
     @PostMapping("/vote")
-    public ResponseEntity<ApiResponse> vote(@RequestBody VoteRequest voteRequest) {
+    public ResponseEntity<ApiResponse> vote(@Valid @RequestBody VoteRequest voteRequest) {
         try {
+            
             Pemilih pemilih = pemilihRepository.findByNik(voteRequest.getNik());
             if (pemilih == null) return ResponseEntity.badRequest().body(new ApiResponse("error", "Pemilih tidak ditemukan"));
             if (pemilih.isSudahMemilih()) return ResponseEntity.badRequest().body(new ApiResponse("error", "Anda sudah memberikan suara"));
@@ -111,6 +121,7 @@ public class PemilihController {
         }
     }
 
+
     @GetMapping("/pemilih/{nik}")
     public ResponseEntity<Pemilih> getPemilihByNik(@PathVariable String nik) {
         Pemilih pemilih = pemilihRepository.findByNik(nik);
@@ -118,5 +129,42 @@ public class PemilihController {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(pemilih);
+    }
+    //REVISI
+    // Penanganan Exception untuk ConstraintViolationException
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<ApiResponse> handleConstraintViolationException(ConstraintViolationException exception) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(new ApiResponse("error", exception.getMessage()));
+    }
+
+    // Penanganan Exception untuk MethodArgumentNotValidException (validasi @RequestBody)
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ApiResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException exception) {
+        Map<String, String> errors = new HashMap<>();
+        
+        exception.getBindingResult().getAllErrors().forEach((error) -> {
+            String fieldName = ((FieldError) error).getField();
+            String errorMessage = error.getDefaultMessage();
+            errors.put(fieldName, errorMessage);
+        });
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(new ApiResponse("error", errors.toString()));
+    }
+
+    // Penanganan Exception untuk HttpMessageNotReadableException (JSON parse error)
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ApiResponse> handleHttpMessageNotReadableException(HttpMessageNotReadableException exception) {
+        String message = "Terjadi kesalahan, tipe data long/integer";
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(new ApiResponse("error", message));
+    }
+
+    // Penanganan Exception umum lainnya
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ApiResponse> handleGeneralException(Exception exception) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(new ApiResponse("error", "Terjadi kesalahan: " + exception.getMessage()));
     }
 }
