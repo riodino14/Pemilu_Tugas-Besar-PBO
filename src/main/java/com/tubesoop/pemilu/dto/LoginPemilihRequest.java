@@ -25,4 +25,23 @@ public class LoginPemilihRequest {
     public void setPassword(String password) {
         this.password = password;
     }
+    private String role;
+    private String identifier;
+
+    // Getter dan Setter
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    public String getIdentifier() {
+        return identifier;
+    }
+
+    public void setIdentifier(String identifier) {
+        this.identifier = identifier;
+    }
 }
