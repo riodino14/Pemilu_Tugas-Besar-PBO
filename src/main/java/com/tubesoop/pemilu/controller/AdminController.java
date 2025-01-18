@@ -66,19 +66,66 @@ public class AdminController {
         }
     }
 
+    // @PutMapping("/calon/{id}")
+    // public ResponseEntity<ApiResponse> editCalon(
+    //     @PathVariable Long id,
+    //     @RequestParam(value = "nama", required = false) String nama,
+    //     @RequestParam(value = "partai", required = false) String partai,
+    //     @RequestParam(value = "daerahPemilihan", required = false) String daerahPemilihan,
+    //     @RequestParam(value = "visiMisi", required = false) String visiMisi,
+    //     @RequestParam(value = "jenis", required = false) String jenis,
+    //     @RequestParam(value = "foto", required = false) MultipartFile foto) {
+
+
+    //     try {
+    //         CalonLegislatif calon = pemiluService.findById(id)
+    //             .orElseThrow(() -> new RuntimeException("Calon tidak ditemukan"));
+
+    //         if (nama != null) calon.setNama(nama);
+    //         if (partai != null) calon.setPartai(partai);
+    //         if (daerahPemilihan != null) calon.setDaerahPemilihan(daerahPemilihan);
+    //         if (visiMisi != null) calon.setVisiMisi(visiMisi);
+    //         if (jenis != null) calon.setJenis(jenis);
+
+    //         if (foto != null && !foto.isEmpty()) {
+    //             String fileName = System.currentTimeMillis() + "_" + foto.getOriginalFilename();
+    //             Path uploadPath = Paths.get(UPLOAD_DIR);
+
+    //             if (!Files.exists(uploadPath)) Files.createDirectories(uploadPath);
+
+    //             Files.copy(foto.getInputStream(), uploadPath.resolve(fileName));
+    //             calon.setFoto(fileName);
+    //         }
+
+    //         pemiluService.updateCalon(calon);
+    //         return ResponseEntity.ok(new ApiResponse("success", "Calon berhasil diperbarui"));
+    //     } catch (IOException e) {
+    //         return ResponseEntity.badRequest().body(new ApiResponse("error", "Gagal menyimpan foto"));
+    //     } catch (Exception e) {
+    //         return ResponseEntity.badRequest().body(new ApiResponse("error", "Gagal mengedit calon"));
+    //     }
+    // }
+
     @PutMapping("/calon/{id}")
     public ResponseEntity<ApiResponse> editCalon(
-        @PathVariable Long id,
-        @RequestParam(value = "nama", required = false) String nama,
-        @RequestParam(value = "partai", required = false) String partai,
-        @RequestParam(value = "daerahPemilihan", required = false) String daerahPemilihan,
-        @RequestParam(value = "visiMisi", required = false) String visiMisi,
-        @RequestParam(value = "jenis", required = false) String jenis,
-        @RequestParam(value = "foto", required = false) MultipartFile foto) {
+            @PathVariable String id, // Menggunakan String dulu agar bisa di-validasi
+            @RequestParam(value = "nama", required = false) String nama,
+            @RequestParam(value = "partai", required = false) String partai,
+            @RequestParam(value = "daerahPemilihan", required = false) String daerahPemilihan,
+            @RequestParam(value = "visiMisi", required = false) String visiMisi,
+            @RequestParam(value = "jenis", required = false) String jenis,
+            @RequestParam(value = "foto", required = false) MultipartFile foto) {
+
+        // Validasi id, cek apakah id adalah angka
+        if (!isNumeric(id)) {
+            return ResponseEntity.badRequest().body(new ApiResponse("error", "ID calon harus berupa angka"));
+        }
+
+        Long calonId = Long.parseLong(id); // Setelah valid, ubah id menjadi Long
 
         try {
-            CalonLegislatif calon = pemiluService.findById(id)
-                .orElseThrow(() -> new RuntimeException("Calon tidak ditemukan"));
+            CalonLegislatif calon = pemiluService.findById(calonId)
+                    .orElseThrow(() -> new RuntimeException("Calon tidak ditemukan"));
 
             if (nama != null) calon.setNama(nama);
             if (partai != null) calon.setPartai(partai);
@@ -104,6 +151,17 @@ public class AdminController {
             return ResponseEntity.badRequest().body(new ApiResponse("error", "Gagal mengedit calon"));
         }
     }
+
+    // Helper method untuk memeriksa apakah string adalah angka
+    private boolean isNumeric(String str) {
+        try {
+            Long.parseLong(str); // Coba parsing menjadi Long
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
 
     @DeleteMapping("/calon/{id}")
     public ResponseEntity<ApiResponse> deleteCalon(@PathVariable Long id) {
