@@ -1,221 +1,280 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const BASE_URL = "http://localhost:8080/api/pemilu";  // URL backend Spring Boot
+  // ========== Konfigurasi URL ==========
+  const ADMIN_BASE_URL = "http://localhost:8080/api/admin"; 
+  // endpoint CRUD calon
+  const CALON_CRUD_URL = `${ADMIN_BASE_URL}/calon`;
 
-  const addCandidateForm = document.getElementById("add-candidate-form");
+  const CALON_REKAP_URL = "http://localhost:8080/api/calon"; 
+  // endpoint rekap => /api/calon/rekapitulasi
+
+  const IMAGE_BASE_URL = "http://localhost:8080/uploads"; 
+  // tempat foto disimpan
+
+  // ========== Elemen HTML ==========
+  // Bagian daftar calon
   const candidateTableBody = document.querySelector("#candidate-table tbody");
   const filterJenis = document.getElementById("filterJenis");
+  const filterDaerahPemilihan = document.getElementById("filterDaerahPemilihan");
 
-  // **Handle Login Form**
-  const loginForm = document.getElementById("login-form");
-  loginForm?.addEventListener("submit", async (e) => {
-    e.preventDefault();
+  // Tombol rekap
+  const loadRekapitulasiButton = document.getElementById("loadRekapitulasi");
+  const filterJenisRekap = document.getElementById("filterJenisRekap");
+  const filterDaerahRekap = document.getElementById("filterDaerahRekap"); // Tambahkan ini
+  const rekapitulasiContainer = document.getElementById("rekapitulasi-container");
 
-    const selectedRole = document.querySelector('input[name="role"]:checked').value;
-    const identifier = document.getElementById("identifier").value.trim();
+  // Form tambah calon (jika ada)
+  const addCandidateForm = document.getElementById("add-candidate-form");
 
-    if (!selectedRole || !identifier) {
-      alert("Harap pilih peran dan masukkan ID/NIK.");
-      return;
-    }
+  // Tombol logout
+  const logoutBtn = document.getElementById("logout-btn");
 
+  // ========== Fungsi Utilitas Fetch ==========
+  const fetchData = async (url, options = {}) => {
     try {
-      const response = await fetch(`${BASE_URL}/login`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ role: selectedRole, identifier: identifier }),
-      });
-      if (response.ok) {
-        alert("Login berhasil!");
-        const data = await response.json();
-        sessionStorage.setItem("identifier", identifier); // Simpan NIK
-        console.log("NIK yang disimpan ke sessionStorage:", identifier);
-
-        sessionStorage.setItem("role", selectedRole);
-      
-        if (selectedRole === "pemilih") {
-          window.location.href = "pemilih.html";
-        } else if (selectedRole === "admin") {
-          window.location.href = "admin.html";
-        }
-      } else {
-        const errorMessage = await response.text();
-        alert("Login gagal: " + errorMessage);
-      }
-    } catch (error) {
-      console.error("Login error:", error.message);
-      alert("Terjadi kesalahan saat login. Silakan coba lagi.");
-    }
-  });
-
-  // **Load Candidates with Filter and Photo**
-  const loadCandidates = async (filter = "ALL") => {
-    try {
-      const response = await fetch(`${BASE_URL}/calon`);
+      const response = await fetch(url, options);
       if (!response.ok) {
-        throw new Error(`Server Error: ${response.status}`);
+        const errorText = await response.text();
+        throw new Error(errorText || `HTTP Error ${response.status}`);
       }
+      return response.json();
+    } catch (error) {
+      console.error("Fetch error:", error);
+      throw error;
+    }
+  };
 
-      const candidates = await response.json();
+  // ========== 1) Load Candidates (Daftar Calon) ==========
+  const loadCandidates = async () => {
+    if (!candidateTableBody) return; // Pastikan elemen ada
+    try {
+      const candidates = await fetchData(CALON_CRUD_URL); // GET /api/admin/calon
       candidateTableBody.innerHTML = "";
 
-      const filteredCandidates = filter === "ALL"
-        ? candidates
-        : candidates.filter(c => c.jenis === filter);
+      // Filter by jenis (client-side)
+      const selectedJenis = filterJenis.value; // "ALL" => semua
+      let filtered = candidates;
+      if (selectedJenis !== "ALL") {
+        filtered = filtered.filter(c => c.jenis === selectedJenis);
+      }
 
-      if (filteredCandidates.length === 0) {
-        candidateTableBody.innerHTML = "<tr><td colspan='7'>Tidak ada calon legislatif.</td></tr>";
+      // Filter by daerah (partial match)
+      const typedDapil = filterDaerahPemilihan.value.trim().toLowerCase();
+      if (typedDapil) {
+        filtered = filtered.filter(c =>
+          c.daerahPemilihan &&
+          c.daerahPemilihan.toLowerCase().includes(typedDapil)
+        );
+      }
+
+      if (filtered.length === 0) {
+        candidateTableBody.innerHTML = `
+          <tr>
+            <td colspan="7" class="text-center">Tidak ada calon legislatif.</td>
+          </tr>
+        `;
         return;
       }
 
-      filteredCandidates.forEach((candidate) => {
-        const row = document.createElement("tr");
-        row.innerHTML = `
-          <td><img src="${BASE_URL}/uploads/${candidate.foto}" alt="${candidate.nama}" width="50"></td>
-          <td>${candidate.nama}</td>
-          <td>${candidate.partai}</td>
-          <td>${candidate.daerahPemilihan}</td>
-          <td>${candidate.jenis}</td>
-          <td>${candidate.visiMisi}</td>
-          <td>
-            <button onclick="window.location.href='edit-candidate.html?id=${candidate.id}'">Edit</button>
-            <button onclick="deleteCandidate('${candidate.id}')">Delete</button>
-          </td>
+      // Tampilkan data
+      filtered.forEach(candidate => {
+        const fotoUrl = candidate.foto
+          ? `${IMAGE_BASE_URL}/${candidate.foto}`
+          : "default.jpg";
+
+        const row = `
+          <tr>
+            <td><img src="${fotoUrl}" alt="${candidate.nama}" style="width: 100%; height: auto; max-width: 85px;"/></td>
+            <td>${candidate.nama}</td>
+            <td>${candidate.partai}</td>
+            <td>${candidate.daerahPemilihan}</td>
+            <td>${candidate.jenis}</td>
+            <td>${candidate.visiMisi}</td>
+            <td>
+              <button
+                onclick="window.location.href='edit-candidate.html?id=${candidate.id}'"
+                class="btn btn-sm btn-primary"
+              >
+                Edit
+              </button>
+              <button
+                onclick="deleteCandidate(${candidate.id})"
+                class="btn btn-sm btn-danger"
+              >
+                Delete
+              </button>
+            </td>
+          </tr>
         `;
-        candidateTableBody.appendChild(row);
+        candidateTableBody.insertAdjacentHTML("beforeend", row);
       });
-    } catch (error) {
-      console.error("Gagal memuat daftar kandidat:", error.message);
-      alert("Gagal memuat daftar kandidat.");
+    } catch (err) {
+      alert("Gagal memuat daftar calon: " + err.message);
     }
   };
 
-  // **Add Candidate (With File Upload)**
-  addCandidateForm?.addEventListener("submit", async (e) => {
-    e.preventDefault();
-
-    const formData = new FormData(addCandidateForm);
-    const id = addCandidateForm.dataset.id;  // Ambil ID calon yang diedit (jika ada)
-
-    try {
-      const endpoint = id ? `${BASE_URL}/calon/${id}` : `${BASE_URL}/calon/upload`;
-      const method = id ? "PUT" : "POST";
-
-      const response = await fetch(endpoint, {
-        method: method,
-        body: formData,
-      });
-
-      if (response.ok) {
-        alert(id ? "Calon berhasil diperbarui!" : "Calon berhasil ditambahkan!");
-        addCandidateForm.reset();
-        delete addCandidateForm.dataset.id;  // Hapus ID setelah edit
-        await loadCandidates(filterJenis.value);
-      } else {
-        const errorMessage = await response.text();
-        alert("Gagal memperbarui/tambah calon: " + errorMessage);
-      }
-    } catch (error) {
-      console.error("Gagal memperbarui/tambah calon:", error.message);
-      alert("Terjadi kesalahan. Silakan coba lagi.");
-    }
-  });
-
-  // **Handle Filter Change**
-  filterJenis?.addEventListener("change", () => {
-    loadCandidates(filterJenis.value);
-  });
-
-  // **Delete Candidate**
+  // ========== Delete Candidate ==========
   window.deleteCandidate = async (id) => {
-    if (confirm("Apakah Anda yakin ingin menghapus calon ini?")) {
-      try {
-        const response = await fetch(`${BASE_URL}/calon/${id}`, {
-          method: "DELETE",
-        });
-
-        if (response.ok) {
-          alert("Calon berhasil dihapus.");
-          await loadCandidates(filterJenis.value);
-        } else {
-          alert("Gagal menghapus calon.");
-        }
-      } catch (error) {
-        console.error("Gagal menghapus calon:", error.message);
-      }
-    }
-  };
-
-  // **Initial Load**
-  loadCandidates();
-  // **Logout Button**
-  document.getElementById("logout-btn").addEventListener("click", () => {
-    // Hapus data sesi
-    sessionStorage.clear();
-  
-    // Redirect ke halaman login
-    alert("Logout berhasil.");
-    window.location.href = "index.html";
-  });
-  const rekapitulasiSection = document.getElementById("rekapitulasi-section");
-  const filterDaerah = document.getElementById("filterDaerah");
-  const loadRekapitulasiButton = document.getElementById("loadRekapitulasi");
-  const rekapitulasiContainer = document.getElementById("rekapitulasi-container");
-
-  // Fungsi untuk memuat rekapitulasi berdasarkan daerah
-  const loadRekapitulasiByDaerah = async () => {
-    const daerah = filterDaerah.value.trim();
-
-    if (!daerah) {
-      alert("Harap masukkan daerah pemilihan.");
-      return;
-    }
-
+    if (!confirm("Apakah Anda yakin ingin menghapus calon ini?")) return;
     try {
-      const response = await fetch(`${BASE_URL}/rekapitulasi-daerah/${encodeURIComponent(daerah)}`);
-      if (!response.ok) {
-        if (response.status === 404) {
-          alert("Tidak ada rekapitulasi untuk daerah pemilihan tersebut.");
-          rekapitulasiContainer.innerHTML = "<p>Tidak ada data untuk daerah ini.</p>";
-          return;
-        } else {
-          throw new Error(`Gagal memuat rekapitulasi: ${response.status}`);
-        }
-      }
-
-      const candidates = await response.json();
-      displayRekapitulasi(candidates);
-    } catch (error) {
-      console.error("Error:", error.message);
-      alert("Terjadi kesalahan saat memuat rekapitulasi. Silakan coba lagi.");
+      await fetchData(`${CALON_CRUD_URL}/${id}`, { method: "DELETE" });
+      alert("Calon berhasil dihapus.");
+      loadCandidates();
+    } catch (err) {
+      alert("Gagal menghapus calon: " + err.message);
     }
   };
 
-  // Fungsi untuk menampilkan hasil rekapitulasi
-  const displayRekapitulasi = (candidates) => {
-    rekapitulasiContainer.innerHTML = ""; // Bersihkan container sebelumnya
+  // ========== 2) Rekapitulasi ==========
+  const loadRekapitulasi = async () => {
+    if (!rekapitulasiContainer) return; // Pastikan elemen ada
+    try {
+      // Ambil filter jenis dan daerah pemilihan
+      const jenis = filterJenisRekap.value; // "" => semua
+      const daerah = filterDaerahRekap.value.trim(); // "" => semua
 
-    if (candidates.length === 0) {
+      let url = `${CALON_REKAP_URL}/rekapitulasi`; // /api/calon/rekapitulasi
+
+      // Tambahkan query parameters jika ada filter
+      const params = new URLSearchParams();
+      if (jenis) {
+        params.append("jenis", jenis);
+      }
+      if (daerah) {
+        params.append("daerahPemilihan", daerah);
+      }
+      if ([...params].length > 0) {
+        url += `?${params.toString()}`;
+      }
+
+      const candidates = await fetchData(url);
+      displayRekapitulasi(candidates);
+    } catch (err) {
+      console.error("Error loadRekapitulasi:", err);
+      alert("Terjadi kesalahan saat memuat rekapitulasi: " + err.message);
+    }
+  };
+
+  // Tampilkan rekap dalam bentuk tabel
+  const displayRekapitulasi = (candidates) => {
+    if (!rekapitulasiContainer) return; // Pastikan elemen ada
+    rekapitulasiContainer.innerHTML = "";
+
+    if (!candidates || candidates.length === 0) {
       rekapitulasiContainer.innerHTML = "<p>Tidak ada data rekapitulasi.</p>";
       return;
     }
 
-    const totalVotes = candidates.reduce((sum, candidate) => sum + candidate.totalSuara, 0);
+    // Hitung total suara
+    const totalVotes = candidates.reduce((sum, c) => sum + c.totalSuara, 0);
 
-    candidates.forEach((candidate) => {
-      const percentage = ((candidate.totalSuara / totalVotes) * 100).toFixed(2);
-      const candidateInfo = `
-        <div style="border: 1px solid #ccc; padding: 10px; margin-bottom: 10px;">
-          <img src="${BASE_URL}/uploads/${candidate.foto}" alt="${candidate.nama}" style="width: 60px; height: 60px; object-fit: cover;">
-          <strong>${candidate.nama}</strong> (${candidate.partai})<br>
-          Daerah: ${candidate.daerahPemilihan}<br>
-          Visi: ${candidate.visiMisi.split('\n')[0]}<br>
-          Total Suara: ${candidate.totalSuara} (${percentage}%)
-        </div>
+    // Buat tabel
+    let tableHTML = `
+      <table class="table table-bordered">
+        <thead class="table-light">
+          <tr>
+            <th>Nama</th>
+            <th>Jenis Caleg</th>
+            <th>Partai</th>
+            <th>Daerah Pemilihan</th>
+            <th>Visi dan Misi</th>
+            <th>Total Suara</th>
+            <th>Persentase</th>
+          </tr>
+        </thead>
+        <tbody>
+    `;
+
+    candidates.forEach(candidate => {
+      const percentage = totalVotes === 0
+        ? "0.00"
+        : ((candidate.totalSuara / totalVotes) * 100).toFixed(2);
+
+      const fotoUrl = candidate.foto
+        ? `${IMAGE_BASE_URL}/${candidate.foto}`
+        : "default.jpg";
+
+      tableHTML += `
+        <tr>
+          <td>
+            <img src="${fotoUrl}" alt="${candidate.nama}" style="width:50px; height:50px; object-fit:cover; margin-right:10px;">
+            <strong>${candidate.nama}</strong>
+          </td>
+          <td>${candidate.jenis}</td>
+          <td>${candidate.partai}</td>
+          <td>${candidate.daerahPemilihan}</td>
+          <td>${candidate.visiMisi}</td>
+          <td>${candidate.totalSuara}</td>
+          <td>${percentage}%</td>
+        </tr>
       `;
-      rekapitulasiContainer.innerHTML += candidateInfo;
     });
+
+    tableHTML += `
+        </tbody>
+      </table>
+    `;
+
+    rekapitulasiContainer.innerHTML = tableHTML;
   };
 
-  // Event Listener untuk tombol "Tampilkan Rekapitulasi"
-  loadRekapitulasiButton.addEventListener("click", loadRekapitulasiByDaerah);
+  // ========== 3) Tambah Calon (Jika ada form) ==========
+  if (addCandidateForm) {
+    addCandidateForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const formData = new FormData(addCandidateForm);
+      try {
+        const response = await fetch(`${CALON_CRUD_URL}`, {
+          method: "POST",
+          body: formData,
+        });
+
+        const result = await response.json();
+        if (result.status === "success") {
+          alert(result.message);
+          window.location.href = "admin.html"; // Redirect setelah sukses
+        } else {
+          alert(`Gagal menambah calon: ${result.message}`);
+        }
+      } catch (err) {
+        alert("Gagal menambah calon: " + err.message);
+      }
+    });
+  }
+
+  // ========== 4) Logout ==========
+  if (logoutBtn) {
+    logoutBtn.addEventListener("click", () => {
+      sessionStorage.clear();
+      alert("Logout berhasil.");
+      window.location.href = "index.html";
+    });
+  }
+
+  // ========== 5) Event Listener / Inisialisasi ==========
+  
+  // Daftar Calon
+  if (filterJenis) {
+    filterJenis.addEventListener("change", loadCandidates);
+  }
+  if (filterDaerahPemilihan) {
+    filterDaerahPemilihan.addEventListener("input", loadCandidates);
+  }
+
+  // Rekapitulasi
+  if (filterJenisRekap) {
+    filterJenisRekap.addEventListener("change", loadRekapitulasi);
+  }
+  if (filterDaerahRekap) { // Tambahkan ini
+    filterDaerahRekap.addEventListener("input", loadRekapitulasi);
+  }
+
+  // Tombol rekap
+  if (loadRekapitulasiButton) {
+    loadRekapitulasiButton.addEventListener("click", loadRekapitulasi);
+  }
+
+  // Load awal daftar calon
+  if (candidateTableBody) {
+    loadCandidates();
+  }
 });

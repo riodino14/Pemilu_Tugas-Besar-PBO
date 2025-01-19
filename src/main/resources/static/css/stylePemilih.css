@@ -186,7 +186,9 @@ body {
     .main-content {
         flex-direction: column; /* Tumpuk vertikal pada layar kecil */
     }
+  
     #candidate-section, #voting-section {
         max-width: 100%;
     }
   }
+  

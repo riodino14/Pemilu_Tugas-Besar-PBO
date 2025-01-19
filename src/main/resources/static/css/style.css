@@ -73,14 +73,4 @@ body {
     background-color: #45a049;
   }
   
-  #register-link {
-    margin-top: 10px;
-    font-size: 14px;
-  } 
-  
-  #register-link a {
-    color: blue;
-    text-decoration: underline;
-    cursor: pointer;
-  }
   
